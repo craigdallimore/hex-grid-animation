@@ -1,5 +1,5 @@
 const rAF = window.requestAnimationFrame;
-import { updateState } from "./state.js";
+import { updateState, setDimensions } from "./state.js";
 import drawScene from "./drawScene.js";
 
 // DRAWING ------------------------------------------------
@@ -23,10 +23,22 @@ function main(ctx: CanvasRenderingContext2D) {
 
 // NOISE ----------------------------------------
 
-const canvas = document.body.querySelector("#canvas");
-if (canvas instanceof HTMLCanvasElement) {
-  const ctx = canvas.getContext("2d");
-  if (ctx instanceof CanvasRenderingContext2D) {
-    main(ctx);
-  }
+const canvas = document.body.querySelector("#canvas") as HTMLCanvasElement;
+const p = canvas.parentNode as HTMLElement;
+
+function onResize() {
+  const rect = p.getBoundingClientRect();
+  setDimensions(rect.width, rect.height);
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
 }
+
+window.addEventListener("resize", onResize);
+
+const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+ctx.translate(0.5, 0.5);
+ctx.scale(devicePixelRatio, devicePixelRatio);
+
+onResize();
+
+main(ctx);
