@@ -1,5 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 import serve from "rollup-plugin-serve";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import livereload from "rollup-plugin-livereload";
 
@@ -8,5 +10,12 @@ export default {
   output: {
     file: "static/bundle.js",
   },
-  plugins: [typescript(), serve("static"), sourcemaps(), livereload()],
+  plugins: [
+    typescript(),
+    serve("static"),
+    commonjs(),
+    resolve(),
+    sourcemaps(),
+    livereload(),
+  ],
 };
