@@ -1,4 +1,11 @@
-export type Point = [number, number];
+import aStar from "@decoy9697/a-star";
+import { getNeighbours } from "./getNeighbours";
+export type Point = {
+  col: number;
+  row: number;
+  x: number;
+  y: number;
+};
 export type Grid = Array<Array<Point>>;
 
 export type State = {
@@ -7,6 +14,7 @@ export type State = {
     height: number;
   };
   grid: Grid;
+  path: Array<Point>;
 };
 
 const state: State = {
@@ -15,6 +23,7 @@ const state: State = {
     height: 0,
   },
   grid: [],
+  path: [],
 };
 
 const getAdj = (h: number, a: number) => Math.cos(a) * h;
@@ -28,15 +37,15 @@ function makeGrid(width: number, height: number): Grid {
 
   const rows = [];
 
-  for (let y = 0; y < height; y += yGap * 2) {
+  for (let y = 0, row = 0; y < height; y += yGap * 2, row += 2) {
     const evenCol = [];
     const oddCol = [];
-    for (let x = 0; x < width; x += xGap * 2) {
-      const point: Point = [x, y];
+    for (let x = 0, col = 0; x < width; x += xGap * 2, col += 1) {
+      const point: Point = { x, y, col, row };
       evenCol.push(point);
     }
-    for (let x = xGap; x < width; x += xGap * 2) {
-      const point: Point = [x, y + yGap];
+    for (let x = xGap, col = 0; x < width; x += xGap * 2, col += 1) {
+      const point: Point = { x, y: y + yGap, col, row: row + 1 };
       oddCol.push(point);
     }
 
@@ -51,8 +60,35 @@ export function updateState(tick: number): State {
   return state;
 }
 
+function eqNode(a: Point, b: Point): boolean {
+  if (!a || !b) {
+    return false;
+  }
+  return a.col === b.col && a.row === b.row;
+}
+
+function heuristic(a: Point, b: Point): number {
+  const h = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+  // Add some randomness so the path is a more scenic route
+  return h + Math.random() * 650;
+}
+
 export function setDimensions(width: number, height: number): void {
   state.ui.width = width;
   state.ui.height = height;
   state.grid = makeGrid(width, height);
+
+  const start = state.grid[0][0];
+  const lastRow = state.grid[state.grid.length - 1];
+  const goal = lastRow[lastRow.length - 1];
+
+  const result = aStar({
+    start,
+    goal,
+    getNeighbours: getNeighbours(state.grid),
+    eqNode,
+    heuristic,
+  });
+
+  state.path = result.reachedGoal ? result.path : [];
 }
