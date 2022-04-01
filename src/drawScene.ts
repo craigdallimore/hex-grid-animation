@@ -1,3 +1,4 @@
+import getPointOnPath from "./getPointOnPath";
 import type { State } from "./state";
 
 export default function drawScene(
@@ -5,8 +6,8 @@ export default function drawScene(
   state: State
 ): void {
   ctx.clearRect(0, 0, state.ui.width, state.ui.height);
-  ctx.fillStyle = "papayawhip";
 
+  // -----------
   state.grid.forEach((row) => {
     row.forEach((point) => {
       ctx.save();
@@ -16,6 +17,8 @@ export default function drawScene(
     });
   });
 
+  // ------------
+  ctx.save();
   if (state.path.length > 0) {
     ctx.strokeStyle = "cyan";
     ctx.beginPath();
@@ -25,4 +28,13 @@ export default function drawScene(
     });
     ctx.stroke();
   }
+  ctx.restore();
+  // --------------
+  const distance = state.travel * state.path.length;
+  const [x, y] = getPointOnPath(state.path, distance);
+  ctx.save();
+  ctx.fillStyle = "rebeccapurple";
+  ctx.fillRect(x - 6, y - 6, 12, 12);
+  ctx.restore();
+  // ----------------
 }
