@@ -8,6 +8,9 @@ export type Point = {
   x: number;
   y: number;
 };
+
+export type Path = Array<Point>;
+
 export type Grid = Array<Array<Point>>;
 
 export type State = {
@@ -16,7 +19,7 @@ export type State = {
     height: number;
   };
   grid: Grid;
-  path: Array<Point>;
+  path: Path;
   travel: number;
 };
 
@@ -58,7 +61,8 @@ function heuristic(a: Point, b: Point): number {
   try {
     const h = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
     // Add some randomness so the path is a more scenic route
-    return h + Math.random() * edgeLength * 6.5;
+    const randVal = Math.random() * edgeLength * 6.5;
+    return h + randVal;
   } catch (e) {
     console.error(e);
     console.log({ a, b });
@@ -67,9 +71,10 @@ function heuristic(a: Point, b: Point): number {
 }
 
 function startNewLine() {
-  const start = getRandomLeaf(state.grid);
-  const goal = getRandomLeaf(state.grid);
-  console.log({ start, goal });
+  const lastGoal = state.path[state.path.length - 1];
+
+  const start = lastGoal || getRandomLeaf(state.grid, null);
+  const goal = getRandomLeaf(state.grid, start);
 
   const result = aStar({
     start,
@@ -79,8 +84,12 @@ function startNewLine() {
     heuristic,
   });
 
-  state.path = result.reachedGoal ? result.path.reverse() : [];
-  state.travel = 0;
+  if (!result.reachedGoal) {
+    startNewLine();
+  } else {
+    state.path = result.reachedGoal ? result.path.reverse() : [];
+    state.travel = 0;
+  }
 }
 
 export function setDimensions(width: number, height: number): void {

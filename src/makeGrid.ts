@@ -16,11 +16,11 @@ export default function makeGrid(
   for (let y = 0, row = 0; y < height; y += yGap * 2, row += 2) {
     const evenCol = [];
     const oddCol = [];
-    for (let x = 0, col = 0; x < width; x += xGap * 2, col += 1) {
+    for (let x = 0, col = 0; x < width + xGap * 2; x += xGap * 2, col += 1) {
       const point: Point = { x, y, col, row };
       evenCol.push(point);
     }
-    for (let x = xGap, col = 0; x < width; x += xGap * 2, col += 1) {
+    for (let x = xGap, col = 0; x < width + xGap * 2; x += xGap * 2, col += 1) {
       const point: Point = { x, y: y + yGap, col, row: row + 1 };
       oddCol.push(point);
     }

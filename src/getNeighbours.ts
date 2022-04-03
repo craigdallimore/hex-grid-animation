@@ -14,7 +14,7 @@ export const getNeighbours =
     const hasOneRowBelow = row < lastRowIndex;
     const hasTwoRowsBelow = row < lastRowIndex - 1;
 
-    const hasColToLeft = col > 0;
+    const hasColToLeft = isEvenRow ? col > 0 : true;
     const hasColToRight = col < lastColIndex;
 
     const neighbours = [];
@@ -22,7 +22,7 @@ export const getNeighbours =
     if (hasOneRowAbove) {
       if (hasColToLeft) {
         // Top left
-        neighbours.push(grid[row - 1][isEvenRow ? col : col - 1]);
+        neighbours.push(grid[row - 1][isEvenRow ? col - 1 : col]);
       }
       if (hasColToRight) {
         // Top right
@@ -37,7 +37,7 @@ export const getNeighbours =
     if (hasOneRowBelow) {
       if (hasColToLeft) {
         // Bottom left
-        neighbours.push(grid[row + 1][isEvenRow ? col : col - 1]);
+        neighbours.push(grid[row + 1][isEvenRow ? col - 1 : col]);
       }
       if (hasColToRight) {
         // Bottom right
