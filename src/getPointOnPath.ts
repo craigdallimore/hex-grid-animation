@@ -1,4 +1,4 @@
-import { Point, Path } from "./state";
+import { Point, Path } from "./internal";
 import {
   distance,
   subtract,

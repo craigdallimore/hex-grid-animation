@@ -1,4 +1,4 @@
-import { Grid, Point } from "./state";
+import { Grid, Point } from "./internal";
 
 const getAdj = (h: number, a: number) => Math.cos(a) * h;
 const getOpp = (h: number, a: number) => Math.sin(a) * h;

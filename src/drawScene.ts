@@ -1,15 +1,8 @@
+import { bgCanvas } from "./internal";
 import getTravelledPath from "./getTravelledPath";
 import getPointOnPath from "./getPointOnPath";
-import type { Grid, Point, State, Path } from "./state";
-import { bgCanvas } from "./backgroundCanvas";
+import type { State, Path } from "./internal";
 import { Vector } from "@decoy9697/vector";
-
-function drawPoint(ctx: CanvasRenderingContext2D, point: Point) {
-  ctx.save();
-  ctx.fillStyle = "hotpink";
-  ctx.fillRect(point.x, point.y, 1, 1);
-  ctx.restore();
-}
 
 function drawCircle(
   ctx: CanvasRenderingContext2D,
@@ -58,10 +51,7 @@ function drawPath(ctx: CanvasRenderingContext2D, path: Path) {
   ctx.restore();
 }
 
-export default function drawScene(
-  ctx: CanvasRenderingContext2D,
-  state: State
-): void {
+export function drawScene(ctx: CanvasRenderingContext2D, state: State): void {
   ctx.clearRect(0, 0, state.ui.width, state.ui.height);
   ctx.drawImage(bgCanvas, 0, 0);
   drawTraveller(ctx, state);

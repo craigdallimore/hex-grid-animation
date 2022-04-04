@@ -1,4 +1,4 @@
-import { Grid, Point } from "./state";
+import { Grid, Point } from "./internal";
 
 function pointsShareEdge(p1: Point, p2: Point, grid: Grid): boolean {
   if (p1.row === 0 && p2.row === 0) {

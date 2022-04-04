@@ -1,4 +1,4 @@
-import { Grid, Point } from "./state";
+import { Grid, Point } from "./internal";
 
 const isEven = (n: number) => n % 2 === 0;
 

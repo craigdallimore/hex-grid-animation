@@ -1,6 +1,4 @@
 import aStar from "@decoy9697/a-star";
-import { bgCtx } from "./backgroundCanvas";
-import { canvas } from "./canvas";
 import { getNeighbours } from "./getNeighbours";
 import getRandomLeaf from "./getRandomLeaf";
 import makeGrid from "./makeGrid";
@@ -40,16 +38,18 @@ const state: State = {
   travel: 0,
 };
 
-export function updateState(tick: number): State {
+interface Effects {
+  (s: State): void;
+}
+
+export function updateState(tick: number, callback: Effects): State {
   const increment = tick / 60;
 
   const nextTravel = state.travel + increment;
 
   if (nextTravel >= 100) {
     startNewLine();
-
-    // We back up the current canvas image to another canvas for reference.
-    bgCtx.drawImage(canvas, 0, 0);
+    callback(state);
   } else {
     state.travel = nextTravel;
   }

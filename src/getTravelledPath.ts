@@ -1,5 +1,5 @@
 import { distance, Vector } from "@decoy9697/vector";
-import { Path, Point } from "./state";
+import { Path, Point } from "./internal";
 
 type Acc = {
   done: boolean;
