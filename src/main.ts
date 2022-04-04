@@ -1,7 +1,7 @@
 const rAF = window.requestAnimationFrame;
-import { updateState, setDimensions } from "./state.js";
-import debounce from "./debounce.js";
+import { updateState } from "./state.js";
 import drawScene from "./drawScene.js";
+import { ctx, debouncedResize, resizeCanvas } from "./canvas.js";
 
 // DRAWING ------------------------------------------------
 
@@ -22,25 +22,9 @@ function main(ctx: CanvasRenderingContext2D) {
   rAF(frame(0));
 }
 
-// NOISE ----------------------------------------
-
-const canvas = document.body.querySelector("#canvas") as HTMLCanvasElement;
-const p = canvas.parentNode as HTMLElement;
-
-function resizeCanvas() {
-  const rect = p.getBoundingClientRect();
-  setDimensions(rect.width, rect.height);
-  canvas.width = rect.width * devicePixelRatio;
-  canvas.height = rect.height * devicePixelRatio;
-}
-
-const debouncedResize = debounce(resizeCanvas, 100);
+// INIT ----------------------------------------
 
 window.addEventListener("resize", debouncedResize);
-
-const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-ctx.translate(0.5, 0.5);
-ctx.scale(devicePixelRatio, devicePixelRatio);
 
 resizeCanvas();
 

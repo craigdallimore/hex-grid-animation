@@ -1,4 +1,4 @@
-import { Point } from "./state";
+import { Point, Path } from "./state";
 import {
   distance,
   subtract,
@@ -6,8 +6,6 @@ import {
   normalise,
   Vector,
 } from "@decoy9697/vector";
-
-type Path = Array<Point>;
 
 type Acc = {
   distance: number;

@@ -1,7 +1,10 @@
 import aStar from "@decoy9697/a-star";
+import { bgCtx } from "./backgroundCanvas";
+import { canvas } from "./canvas";
 import { getNeighbours } from "./getNeighbours";
 import getRandomLeaf from "./getRandomLeaf";
 import makeGrid from "./makeGrid";
+
 export type Point = {
   col: number;
   row: number;
@@ -18,12 +21,12 @@ export type State = {
     width: number;
     height: number;
   };
+  edgeLength: number;
   grid: Grid;
   path: Path;
   travel: number;
 };
 
-const edgeLength: number = 100;
 const angle: number = (30 * Math.PI) / 180;
 
 const state: State = {
@@ -31,18 +34,22 @@ const state: State = {
     width: 0,
     height: 0,
   },
+  edgeLength: 30,
   grid: [],
   path: [],
   travel: 0,
 };
 
 export function updateState(tick: number): State {
-  const increment = tick / 100;
+  const increment = tick / 60;
 
   const nextTravel = state.travel + increment;
 
-  if (nextTravel > 100) {
+  if (nextTravel >= 100) {
     startNewLine();
+
+    // We back up the current canvas image to another canvas for reference.
+    bgCtx.drawImage(canvas, 0, 0);
   } else {
     state.travel = nextTravel;
   }
@@ -61,7 +68,7 @@ function heuristic(a: Point, b: Point): number {
   try {
     const h = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
     // Add some randomness so the path is a more scenic route
-    const randVal = Math.random() * edgeLength * 6.5;
+    const randVal = Math.random() * state.edgeLength * 6.5;
     return h + randVal;
   } catch (e) {
     console.error(e);
@@ -95,6 +102,6 @@ function startNewLine() {
 export function setDimensions(width: number, height: number): void {
   state.ui.width = width;
   state.ui.height = height;
-  state.grid = makeGrid(edgeLength, angle, width, height);
+  state.grid = makeGrid(state.edgeLength, angle, width, height);
   startNewLine();
 }
